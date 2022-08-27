@@ -1,24 +1,30 @@
 import './App.css';
 import {useEffect, useState} from 'react'
+import axios from 'axios'
 
 function App() {
 
-  const [pokiList, setPokiList] = useState([])
+  const [pokeList, setpokeList] = useState([])
 
   useEffect(() =>{
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=807')
-    .then((result)=>{
-      return result.json()
-    })
-    .then((res)=>{
-      setPokiList(res.results)
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
+    // axios.get('https://pokeapi.co/api/v2/pokemon?limit=807').then( resp => setpokeList(resp.data) )
+    axios.get('https://pokeapi.co/api/v2/pokemon?limit=807').then( resp => processData(resp.data.results) )
   },[])
 
-  let list = pokiList.map((poki, index)=> <li key={index}>{poki.name}</li>)
+
+  const processData = (data) => {
+
+    var nameArray = []
+
+    for (const object of data){
+      nameArray.push(object)
+    }
+    setpokeList(nameArray)
+  } 
+
+  //this works but I'll bet this could be done with a map in the axios get .then
+
+  let list = pokeList.map((poke, index)=> <li key={index}>{poke.name}</li>)
 
   return (
     <ol>
